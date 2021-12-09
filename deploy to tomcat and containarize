@@ -1,0 +1,20 @@
+the code is on a server with login access (we have to delete code template and put this code in webapp)
+create a repo in github : Project1 (Helloworld as template)
+in gitbash: mkdir Project1; cd Project1; git clone URLrepoProject1; git clone URLrepoHelloworld; cp -r Helloworld/* Project1; 
+cd Project1; 
+cd webapp/src/main/webapp/; 
+rm -rf index.jsp; 
+scp -r lil@lilkon.com:/home/lil/Learn/* . ; 
+cd ../../../; 
+code pom.xl ; (to open that code on visual studio code and change the artifact name , also in dockerfile)
+cd ../; git status; git add .; git commit -m "newP1"; git push origin master 
+(sent URLcode to developer for changing:clone in local repo ->create branch->change->test by deploy in dev_k8s_cluster; QA_k8s_cluster; ->if good; submit a CR -> deployProd)
+while developer making changing, we do a test to see if pipeline gonna run smoothly
+create job in Jenkins; maven project; URLgit; pull SCM *****; clean install package; docker build and publish; ${BUILD_NUMBER }
+if Good, deploy manually in k8s cluster on GCP
+GCP; k8s engine; clusters; connect; run in cloudshell; put deploy.yml and service.yml; kubectl get deploy; if any kubectl delete deployment nameapp; 
+kubectl create -f deploy.yml; kubectl get service (access IP_LB on browser and the code working fine)
+kubectl edit deployment nameapp; kubectl get pods
+Developers making changes; in Gitbash; clone in local repo ->create branch ->code pom.xml; change; git status; git add .; git commit -m "ticket number"; 
+git push origin New_branch; with every minute pull, Jenkins will built image automatically; In cloudshell; vim deploy.yml; put new_image; kubectl apply -f deploy.yml
+if good, deploy to prod with new_image or rollback strategie to deploy the old code ->
