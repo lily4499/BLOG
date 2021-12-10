@@ -1,0 +1,17 @@
+open a linux server (VM)  with docker install; docker ps; docker ps -a
+go to Dockerhub; splunk/splunk; docker run -d -p 8000:8000 -e "SPLUNK_START_ARGS=--accept-license" -e "SPLUNK_PASSWORD=abc123@#$" --name splunk splunk/splunk:latest
+docker ps; ifconfig; IP_VM:8000
+docker exec -it ID_cont bash; id
+In splunk server -> search & reporting -> search server -> give time -> to get intelligent info from the data
+-> add data -> upload file -> access.log, secure.log, error.log  -> start searching
+Tool use to analyse data ; to monitor; to create alert; create report. generate report: error in the last 24h
+{ someone use the root account to login to the server, splunk should send alert 
+=> maybe we can block that server or shut down the ssh while we investigating who is using the root user to login)
+ 
+ 
+ k8s monitor the pods, if pods go down another one come out. but k8s can't monitor the app running inside the pods.
+ then we need Prometheus to monitor the app. prometheus use grafana for visualization
+ when we say k8s cluster, we talk about microservice 
+ (way for company to break an app into small pieces (login page, contact page, video page ...) and run each piece as a service in k8s cluster)
+ 
+ 
