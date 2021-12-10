@@ -3,14 +3,15 @@ in github ; create devcode; create doc
 in Gitbash; mkdir devpip; cd devpip; 
 mkdir devcode doc; cd devcode(echo "# devcode" >> README.md ); git init; git remote add origine URLrepo_devcode; git commit -m "new files"
 copy code from server -> scp -r lil@remote:/path_folder_to_sent/* username@remote2:/where_put
-vim webapp/pom.xml; change artifact name webapp.war to dev.war; 
+vim webapp/pom.xml(specify kind of artifact to build:war file) ; change artifact name webapp.war to dev.war; 
 vim webapp/src/main/webapp/index.jsp
 vim Dockerfile copy webapp/target/dev.war /usr/local/tomcat/webapps
 git add .; git commit -m "dev pratic"; git push origine master
 cd ../; cd doc(echo "# devcode" >> README.md ); git init; git remote add origine URLrepo_doc; git commit -m "new files"
 copy doc from server -> scp -r lil@remote:/home/lil/dev*/* .; git add .; git....
 
-set up Ansible; EC2 AWS; user data(yum update, install docker); security group (ssh from world) -> yum install ansible; cd /etc/ansible
+set up Ansible; EC2 AWS; user data(yum update, install docker); security group (ssh from world) -> jenkins login to ansible and run the deployment
+yum install ansible; cd /etc/ansible
 systemctl start docker; systemctl enable docker; docker run -it laly9999/centos-ssh; docker ps; docker inspect id; ssh "IP"; exit; 
 vim hosts ([serv]) (ser1 ansible_host="IP" ansible_ssh_user=root ansible_ssh_pass=abc) -> ansible serv -m ping
 vim play.yml( ---
@@ -31,4 +32,16 @@ docker exec -it id_cont bash -> service httpd status -> exit
 
 set up jenkins; EC2 AWS; from AWSmarket; user data(yum update, install docker); security group (ssh from myIP, 8080) ->service jenkins restart
 (vim /etc/yum.repos.d/jenkins.repo; change gpgcheck=1 to 0);  yum update;
-on jenkins console -> plugins cloudbees, ssh ->
+on jenkins console -> plugins cloudbees, ssh -> job_dev_code; maven job; git; poll scm; goals; -> BUILD WAR.FILE; put in jenkins webapp directory(webapp/target/warfile)
+To put that in a REGISTRY -> job_dev_code; docker build and publish; ${BUID_NUMBER}; registry credentials; 
+usermod -aG docker jenkins; service jenkins restart; -> now the code is ready to be deploy in k8s
+
+jenkins login to ansible via a ansible_user; cd /etc/ansible/; useradd; passwd; vim ansible.cfg( host_key_checking = False); exit-> 
+ec2@: sudo -i ->root@: su ans_user ->ans_user@: ansible -i /etc/ansible/hosts serv -m ping 
+[AWS is set up to use key authentication; we set it up to use passwd-> vim /etc/ssh/sshd_config(passwdAuthent yes); service sshd restart]
+
+in jenkins console; manage credential: ans_user -> configure system-> ssh remote hosts -> ssh site : IP ansible; port:22; ans_user credentials -> 
+job_deploy; freestyle; build triggers: build after othe projects are built(job_dev_code) -> execute shell script on remote host using ssh; 
+ansible -i /etc/ansible/hosts serv -m ping ; ansible-playbook /etc/ansible/play.yml
+
+Now we set up the k8s mas ter as a target host in Ansible
