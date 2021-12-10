@@ -11,9 +11,11 @@ cd ../; cd doc(echo "# devcode" >> README.md ); git init; git remote add origine
 copy doc from server -> scp -r lil@remote:/home/lil/dev*/* .; git add .; git....
 
 set up Ansible; EC2 AWS; user data(yum update, install docker); security group (ssh from world) -> jenkins login to ansible and run the deployment
-yum install ansible; cd /etc/ansible
-systemctl start docker; systemctl enable docker; docker run -it laly9999/centos-ssh; docker ps; docker inspect id; ssh "IP"; exit; 
-vim hosts ([serv]) (ser1 ansible_host="IP" ansible_ssh_user=root ansible_ssh_pass=abc) -> ansible serv -m ping
+yum install ansible; cd /etc/ansible; systemctl start docker; systemctl enable docker; 
+
+****************************************************************************************************************
+docker run -it laly9999/centos-ssh; docker ps; docker inspect id; ssh "IP"; exit; 
+vim hosts ([serv]) (ser1 ansible_host="IP_container" ansible_ssh_user=root ansible_ssh_pass=abc) -> ansible serv -m ping
 vim play.yml( ---
                - hosts: serv
                  user: root
@@ -25,23 +27,55 @@ vim play.yml( ---
                       - name: Start Daemon
                         service:
                           name: httpd
-                          state: started
+                          state: started               ("{{STATE}}")
                           enabled: yes
 ansible-playbook play.yml --syntax-check                          
 docker exec -it id_cont bash -> service httpd status -> exit
-
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 set up jenkins; EC2 AWS; from AWSmarket; user data(yum update, install docker); security group (ssh from myIP, 8080) ->service jenkins restart
 (vim /etc/yum.repos.d/jenkins.repo; change gpgcheck=1 to 0);  yum update;
 on jenkins console -> plugins cloudbees, ssh -> job_dev_code; maven job; git; poll scm; goals; -> BUILD WAR.FILE; put in jenkins webapp directory(webapp/target/warfile)
 To put that in a REGISTRY -> job_dev_code; docker build and publish; ${BUID_NUMBER}; registry credentials; 
 usermod -aG docker jenkins; service jenkins restart; -> now the code is ready to be deploy in k8s
-
++++++
 jenkins login to ansible via a ansible_user; cd /etc/ansible/; useradd; passwd; vim ansible.cfg( host_key_checking = False); exit-> 
 ec2@: sudo -i ->root@: su ans_user ->ans_user@: ansible -i /etc/ansible/hosts serv -m ping 
 [AWS is set up to use key authentication; we set it up to use passwd-> vim /etc/ssh/sshd_config(passwdAuthent yes); service sshd restart]
-
++++++
 in jenkins console; manage credential: ans_user -> configure system-> ssh remote hosts -> ssh site : IP ansible; port:22; ans_user credentials -> 
 job_deploy; freestyle; build triggers: build after othe projects are built(job_dev_code) -> execute shell script on remote host using ssh; 
-ansible -i /etc/ansible/hosts serv -m ping ; ansible-playbook /etc/ansible/play.yml
+ansible -i /etc/ansible/hosts serv -m ping ; ansible-playbook /etc/ansible/play.yml (ansible-playbook /etc/ansible/play.yml -e "STATE=restarted  ")
 
-Now we set up the k8s mas ter as a target host in Ansible
+
+***********************************************************************************************************************************************
+Now we set up the k8s master as a target host in Ansible; k8s cluster on AWS using KOPS; 
+create Ubuntu EC2 instance(manage_server);  user data(apt update); security group(ssh from world) 
+->vim /etc/ssh/sshd_config (enable passwd authentication & permitroot login); service sshd restart
+-> sudo -i; passwd root; create k8s_user: useradd -d /home/ansible -s /bin/bash/ user_name -m; visudo: root , nopasswd
+(see documentation to install k8s using KOPS)-> kops get cluster; kops update cluster --name lil.net --yes;  kops validate cluster; 
+cluster ready -> kubectl get nodes; vim deploy.yml (see documentation) ; kubectl create -f deploy.yml; kubectl get pods; kubectl describe pod pod_name;   
+vim deploy.yml; kubectl apply -f deploy.yml; kubectl get deploy;  kubectl get pod -o wide;
+Set a loadbalancer in front of the container(pods) where the app are running to receive traffic -> vim service.yml
+To access my app from the internet; k8s_master create by kops; security group; inbound rules:31200: 00000; oN BROWSER; ip_k8s :3200
+
+Set up Ansible to talk to k8s manage_server -> 
+On ansible_server-> vim hosts ([k8s]) (kub ansible_host="IP_k8s" ansible_ssh_user=k8s_user ansible_ssh_pass=123) -> 
+ansible k8s -m ping   or (ansible -i /etc/ansible/hosts k8s -m ping) -> from ansible_user
+vim k8s.yml( ---
+               - hosts: k8s
+                 become_user: k8s_user   (root)
+                 become_method: sudo
+                 tasks:
+                      - name: Delete deployment
+                        command:kubectl delete deployment app_name
+                        ignore_errors: yes
+                      
+                      - name: Deploy App
+                        command:kubectl create -f deploy.yml
+                      - name: Delete service
+                        command:kubectl delete deployment service_name
+                        ignore_errors: yes
+                      - name: Deploy service
+                        command:kubectl create -f service.yml  
+  ansible-playbook k8s.yml --syntax-check                           
+in jenkins job; ansible-playbook /etc/ansible/k8s.yml 
