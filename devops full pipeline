@@ -38,7 +38,7 @@ on jenkins console -> plugins cloudbees, ssh -> job_dev_code; maven job; git; po
 To put that in a REGISTRY -> job_dev_code; docker build and publish; ${BUID_NUMBER}; registry credentials; 
 usermod -aG docker jenkins; service jenkins restart; -> now the code is ready to be deploy in k8s
 +++++
-jenkins login to ansible via a ansible_user; cd /etc/ansible/; useradd; passwd; vim ansible.cfg( host_key_checking = False); exit-> 
+jenkins login to ansible via a ansible_user; cd /etc/ansible/; useradd user_name -s/bin/bash/ -m; passwd; vim ansible.cfg( host_key_checking = False); exit-> 
 ec2@: sudo -i ->root@: su ans_user ->ans_user@: ansible -i /etc/ansible/hosts serv -m ping 
 [AWS is set up to use key authentication; we set it up to use passwd-> vim /etc/ssh/sshd_config(passwdAuthent yes); service sshd restart]
 +++++
