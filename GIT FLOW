@@ -1,0 +1,60 @@
+Find a project you want to contribute to
+Fork it 
+create a local repository
+ 
+Clone it with main branch from remote repository to your local system
+Make a Dev branch
+Make your changes
+Push it with Dev branch to your repo
+Make a Feature branch
+Add feature
+Push it with Feature branch to your repo
+Make a PR (Click the Compare & pull request button, Click Create pull request to open a new pull request)
+Merge feature branch to Dev branch
+Create release branch
+run test
+Make a PR (Click the Compare & pull request button, Click Create pull request to open a new pull request)
+Merge release branch to main branch with a new version
+Delete release branch
+
+
+
+$ git checkout -b iss53  (create a new branch and switch to that)
+git branch iss53 (create new branch)
+$ git checkout iss53  (switch to new branch)
+
+$ git checkout -b hotfix
+Switched to a new branch 'hotfix'
+$ vim index.html
+$ git commit -a -m 'Fix broken email address'
+[hotfix 1fb7853] Fix broken email address
+ 1 file changed, 2 insertions(+)
+ 
+  git checkout master  (switch to master)
+$ git merge hotfix  (to merge hotfix to master)
+Updating f42c576..3a0874c
+Fast-forward
+ index.html | 2 ++
+ 1 file changed, 2 insertions(+)
+ 
+ git branch -d hotfix
+Deleted branch hotfix (3a0874c).
+
+git status
+
+
+ Now you need to take the local Git repository and put it into a remote, 
+ centrally-located repository so others can collaborate on the project. 
+ By storing the project code into a central, remote repository, 
+ other collaborators can copy the code to their system for modification.
+
+To CREATE REMOTE REPO
+In github, create local repo
+in gitbash, create directory and cd into ; then add a read me file
+  git init
+  git remote add origin URL_repo ( configure local repo into remote repo)
+  git remote -v (to verify the origin’s URL matches the remote repository.)
+  git branch -M main (force rename the local branch to main )
+  
+  git push -u origin main ( push our local repository to the remote GitHub repository)
+  git pull origin main (pull down the contents of the GitHub remote repository to my local system)
