@@ -1,0 +1,18 @@
+manage plugins -> warning Next Generation: collects compiler warning or issues reported by static analysis tools
+and visualisze the results. it has numerous static analysis tools (junit, pmd, checkstyle, findbugs. sonarqube .....
+Download now and install after restart
+job_scantest ; maven job; copy from maven; 
+Goals and options: clean install package checkstyle:checkstyle pmd:pmd findbugs:findbugs
+post steps: run if build is succeeds
+Add post build action; choose Record compiler warnings and static analysis results
+choose all 3 tools
+run job
+if the code doesnt meet the requirement the job will fail, sent an email to dev via slack tool,  the dev resolve the issues then we can sent it to prod
+
+how to configure to receive email:
+click on advanced
+Fail the build if errors have been reported during the execution
+
+how to configure the notification
+after install plugin
+click on Add post build action
