@@ -1,0 +1,7 @@
+on browser ; terraform.io; docs; providers; in the text, click on terraform registry; GOOGLE CLOUD PLATFORM; terraform-google-modules / k8s-engine
+ on cloudshell editor -> git clone https://github.com/lily4499/terraform-gke.git -> cd; vi variable.tf; :set background=dark; :set nu; :wq ; change project id, region
+ vi kubernetes.tf; 
+ terraform init; terraform plan; terraform apply -> outputs with URL -> copy that and go to the browser -> ip:8080/school -> terraform destroy
+ in GCP -> k8s engine -> clusters
+ (modify repo on github via cloudshell -> rm -rf terraform.tfstate ./terraform/ ; git status; git add. ; git coomit -m clear ; git push)
+ before destroy, if we have another image in GCR to test; vi kubernets.tf ( update image); terraform apply; terraform destroy
