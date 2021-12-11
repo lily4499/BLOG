@@ -1,0 +1,15 @@
+Pro week 22
+There is a python app  with AI capability that will be used to analyse the data stored in bigQuery
+problem: afeter each developer change, we need a docker image stored in GCR
+Application: github => cloud build => docker images in GCR => deploy to GKE. 
+App is not runnning or consumed 24/7 , it is needed just whenwe have a prototype demo,
+need on demand solution for the gke cluster so we can deploy the app during demo
+
+for my knowledge the best solution is terraform
+why? we can create , destroy, and recreate
+how did i do?
+i did some research 
+download some module from the google cloud community terraform project
+modify it to fit our environnment or reality
+test
+deliver
