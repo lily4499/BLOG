@@ -1,0 +1,29 @@
+Dev commit:
+
+Find a project you want to contribute to
+Fork it 
+create a local repository
+Clone it from remote repository to your local system
+Make a feature branch
+Make your changes
+run test (code review)
+Push it  to your local repo
+Make a PR with the test result (Click the Compare & pull request button, Click Create pull request to open a new pull request)
+Create release branch
+Merge feature branch to release branch
+
+
+jenkins trigger:
+
+CI pipeline
+
+
+
+
+
+
+run test (code review)
+Make a PR (Click the Compare & pull request button, Click Create pull request to open a new pull request)
+
+Merge release branch to main branch with a new version
+Delete release branch
