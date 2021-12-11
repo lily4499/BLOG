@@ -1,29 +1,36 @@
-Dev commit:
+													
+										CI pipeline						
+														outputs		                target	
+			Git repo										
+Dev 	commit							trigger		Build code (maven)		code artifacts			
+								(jenkins)	Run unit tests (Junit)		test result			
+			code in Github with main branch				Build image			container image			
+			create a new branch					push image							Container registry	
+			clone it										
+			make change										
+			push it back										
+			run test (code view)										
+			submit PR										
+			merge to main										
+										CD pipeline						
+													
+										deploy to Dev (ansible)						test/Dev cluster	
+										Integration test(selinium)							
+			If test successful					deploy to QA (ansible)						test/QA cluster	
+										Integration test(selinium)						
+			If test successful					Deploy to Pre-prod(ansible)					test/Pre-prod cluster	
 
-Find a project you want to contribute to
-Fork it 
-create a local repository
-Clone it from remote repository to your local system
-Make a feature branch
-Make your changes
-run test (code review)
-Push it  to your local repo
-Make a PR with the test result (Click the Compare & pull request button, Click Create pull request to open a new pull request)
-Create release branch
-Merge feature branch to release branch
 
-
-jenkins trigger:
-
-CI pipeline
-
-
-
-
-
-
-run test (code review)
-Make a PR (Click the Compare & pull request button, Click Create pull request to open a new pull request)
-
-Merge release branch to main branch with a new version
-Delete release branch
+			If test successful					CD pipeline						
+													
+										"Submitting a CR (service Now)
+										with playbook and test results"						
+													
+										Deploy to production						production cluster	
+													
+													
+										CM pipeline						
+													
+										Monitor the app running						production cluster	
+										 in the cluster						
+							 			(Prometheus and grafana)						
