@@ -1,4 +1,4 @@
-create 2 repo on github; 
+create 2 repo on github that will be a remote repositry; 
 in github ; create devcode; create doc
 in Gitbash; mkdir devpip; cd devpip; 
 mkdir devcode doc; cd devcode(echo "# devcode" >> README.md ); git init; git remote add origine URLrepo_devcode; git commit -m "new files"
