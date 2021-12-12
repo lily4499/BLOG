@@ -13,3 +13,70 @@ download some module from the google cloud community terraform project
 modify it to fit our environnment or reality
 test
 deliver
+
+Steps for demo
+clone repo
+cd repo
+./infra_setup.sh
+access the app on the browser
+./infra_destroy.sh
+
+Integrate jenkins with GKE (we can automate the deployment of our docker image in GKE right after creating the image)
+jenkins build image ->  push image to GCR -> 
+  jenkins kick off another job -> login to ansible (hosts; playbook with instruction to deploy app and service) 
+  -> login to k8s master (deploy.yml with image to pull; service.yml)-> deploy to the nodes
+
+here on GCP, we cant access k8s master, it sel maintain by google, we dont see it , see only the nodes
+jenkins will deploy directly to the k8s cluster with one job to push image to gcr and deploy to gke at the same time
+in this case, in git hub we have the code with deploy.yml, service.yml to deploy direvtly to k8s cluster
+we need to configure jenkins to have access to the cluster (gke)
+
+login to jenkins server and install google SDK tool that enable to access goole infrastructure
+prerequisites:
+jenkins needs to be install on a linux base os
+install docker
+yum install -y yum-utils device-mapper-persistent-data lvm2
+yum-config-manager --add-repo https://download.docker.com/linus/centos/docker-ce.rep
+yum install docker
+systemctl start docker
+system enable docker
+
+-install kubectl
+-configure kubernetes repository
+cat <<EOF> /etc/yum.repos.d/kubernetes.repo
+[kubernetes]
+name=kubernetes
+baseurl=https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
+enabled=1
+gpgcheck=1
+repo_gpgcheck=1
+gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg
+https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+EOF
+yum install -y kubectl
+-install google SDK tool
+cat <<EOF>/etc/yum.repos.d/google-cloud-sdk.repo
+[google-cloud-sdk]
+name=Google Cloud SDK
+baseurl=https://packages.cloud.google.com/yum/repos/cloud-sdk-el7-x86_64
+enabled=1
+repo_gpgcheck=1
+gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg
+https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+EOF
+yum install google-cloud-sdk
+gcloud auth login
+- Get the k8s config file from google and put it in jenkins's home directory
+cd /var/lib/jenkins
+$mkdir .kube
+cd .kube
+-how to get the config file: 
+-connect your jenkins server with k8s account 
+(open cluster with app running on GCP;  then click on connect) then copy
+gcloud container clusters get-credentials cluster-name --zone us-east1-b --project PROJECTID  and paste in cloushell
+cd .kube; copy from GCP the config file to home directory jenkins (scp config lil@ipjenkins:/var/lib/jenkins/.kube/config) -> chown jenkins:jenkins *
+- run kubectl command as user jenkins
+kubectl get nodes
+
+include the deployment file in your project and service file and then you can add thr kubectl command as buil;d steps for the deployment
+yum install finger; finger jenkins -> give the directory of jenkins
