@@ -5,3 +5,19 @@ on browser ; terraform.io; docs; providers; in the text, click on terraform regi
  in GCP -> k8s engine -> clusters
  (modify repo on github via cloudshell -> rm -rf terraform.tfstate ./terraform/ ; git status; git add. ; git coomit -m clear ; git push)
  before destroy, if we have another image in GCR to test; vi kubernets.tf ( update image); terraform apply; terraform destroy
+
+
+5. Load data
+bq load \
+    --source_format=CSV \
+    --skip_leading_rows=1 \
+    bq_load_codelab.customer_transactions \
+    ./customer_transactions.csv \
+    
+    Get the table details
+    bq show bq_load_codelab.customer_transactions
+    
+    
+    
+    we buildind prototypes app and it has ability to consume a lot of data, so my job is to figure how the data can go from the provider to bigquery
+    i am using jenkins and github( provider load data in there using 3 git commands), jenkins trigger a job. running script in execute shell(to transform data and load it biq query)
