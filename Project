@@ -17,9 +17,20 @@ deliver
 Steps for demo
 clone repo
 cd repo
-./infra_setup.sh
+./infra_setup.sh (vi infra_setup.sh; #!/bin/bash/ terraform init; terraform pplan; terraform apply -auto-approve; exit 0); chmod +x infra_setup.sh
 access the app on the browser
-./infra_destroy.sh
+./infra_destroy.sh  (touch infra-destroy.sh; chmod +x infra_destroy.sh
+
+to put change on repo in github
+git remote -v
+git status
+git add .
+git commit -m
+git push
+
+
+project 2
+
 
 Integrate jenkins with GKE (we can automate the deployment of our docker image in GKE right after creating the image)
 jenkins build image ->  push image to GCR -> 
