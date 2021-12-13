@@ -85,7 +85,8 @@ cd .kube
 -connect your jenkins server with k8s account 
 (open cluster with app running on GCP;  then click on connect) then copy
 gcloud container clusters get-credentials cluster-name --zone us-east1-b --project PROJECTID  and paste in cloushell
-cd .kube; copy from GCP the config file to home directory jenkins (scp config lil@ipjenkins:/var/lib/jenkins/.kube/config) -> chown -R jenkins:jenkins /var/lib/jenkins
+cd .kube; copy from GCP the config file to home directory jenkins (scp config lil@ipjenkins:/var/lib/jenkins/.kube/config) 
+-> chown -R jenkins:jenkins /var/lib/jenkins
     jenkins job; freestyle; 
     execute shell: kubectl set image deployment/app-dev1 app-dev1-kserge2001/gcloud:${BUILD_NUMBER}
     #kubectl apply -f deployment.yml   (kind=deployment; name_app=app-dev1
