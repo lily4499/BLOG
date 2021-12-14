@@ -20,4 +20,5 @@ bq load \
     
     
     we buildind prototypes app and it has ability to consume a lot of data, so my job is to figure how the data can go from the provider to bigquery
-    i am using jenkins and github( provider load data in there using 3 git commands), jenkins trigger a job. running script in execute shell(to transform data and load it biq query)
+    i am using jenkins and github( provider load data in there using 3 git commands), jenkins trigger a job. 
+    running script in execute shell(to transform data and load it biq query)
